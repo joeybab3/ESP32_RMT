@@ -16,7 +16,6 @@
 #define RMT_TX_CARRIER_EN    1   /*!< Enable carrier for IR transmitter test with IR led */
 #endif
 
-
 ESP32_RMT::ESP32_RMT()
 {
 	//printf("booting remote peripheral\n\r");
@@ -27,52 +26,34 @@ void ESP32_RMT::begin(uint8_t pin, bool mode)
 {
 	if(mode==TRANSMIT)
 	{
-
 		txPin = pin;	
-	
 	}	
 }
-
-
-
-
 
 void ESP32_RMT::rmt_tx_init()
 {
   
 }
 
-
-
-
 void ESP32_RMT::send(uint8_t data)
 {
-
-
-
-
     int channel =  (rmt_channel_t)RMT_TX_CHANNEL;
-   
     int nec_tx_num = RMT_TX_DATA_NUM;
     for(;;) {
-		//ESP_LOGI(NEC_TAG, "RMT TX DATA");
+	//ESP_LOGI(NEC_TAG, "RMT TX DATA");
         size_t size = (sizeof(rmt_item32_t) * 1);
         //each item represent a cycle of waveform.
-        rmt_item32_t* item = (rmt_item32_t*) malloc(size);
-			
-		item->level0 = 1;
-		item->duration0 = (9000) / 10 * RMT_TICK_10_US;
-		item->level1 = 0;
-		item->duration1 = (4500) / 10 * RMT_TICK_10_US;
+        rmt_item32_t* item = (rmt_item32_t*) malloc(size);	
+	item->level0 = 1;
+	item->duration0 = (9000) / 10 * RMT_TICK_10_US;
+	item->level1 = 0;
+	item->duration1 = (4500) / 10 * RMT_TICK_10_US;
 		
-		
-		//printf("writing items\n\r");
+	//printf("writing items\n\r");
         rmt_write_items((rmt_channel_t)channel, item, 2, true);
         //Wait until sending is done.
         rmt_wait_tx_done((rmt_channel_t)channel);
         //before we free the data, make sure sending is already done.
         free(item);
     }
-	
 }
-
